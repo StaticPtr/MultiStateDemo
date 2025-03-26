@@ -10,6 +10,8 @@ namespace Game.FSM
         public State? CurrentState { get; private set; }
         public State? LastState { get; private set; }
 
+        public event Action<StateMachine>? OnStateChanged;
+
         protected readonly List<State> States = new();
 
         /// <summary>
@@ -47,9 +49,12 @@ namespace Game.FSM
                 throw new ArgumentException("State is not in state machine", nameof(state));
             
             CurrentState?.OnLeaving();
+            
             LastState = CurrentState;
             CurrentState = state;
             CurrentState.OnEnter(message);
+            
+            OnStateChanged?.Invoke(this);
         }
 
         protected virtual State? GetStateOfType(Type type)
