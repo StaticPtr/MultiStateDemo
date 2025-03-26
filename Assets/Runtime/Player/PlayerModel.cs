@@ -7,6 +7,7 @@ namespace Runtime.Player
         public double Health { get; set; }
         public double Score { get; set; }
 
-        public StateMachine StateMachine { get; } = new();
+        public StateMachine InputStateMachine { get; } = new();
+        public StateMachine PowerStateMachine { get; } = new();
     }
 }

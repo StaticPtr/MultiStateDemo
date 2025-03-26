@@ -1,5 +1,7 @@
 ﻿using System;
 using Game.FSM;
+using Runtime.Player.InputStates;
+using Runtime.Player.PowerStates;
 using UnityEngine;
 
 namespace Runtime.Player
@@ -11,19 +13,25 @@ namespace Runtime.Player
         private void Awake()
         {
             //TODO: Should the states be ScriptableObjects?
-            Model.StateMachine.AddState<NormalPlayerState>();
-            Model.StateMachine.AddState<GhostPlayerState>();
-            Model.StateMachine.AddState<EmpoweredPlayerState>();
+            Model.InputStateMachine.AddState(new NormalPlayerInputState(this, Model.InputStateMachine));
+            Model.InputStateMachine.AddState(new CooldownPlayerInputState(this, Model.InputStateMachine));
+            
+            Model.PowerStateMachine.AddState(new NormalPlayerPowerState(this, Model.PowerStateMachine));
+            Model.PowerStateMachine.AddState(new GhostPlayerPowerState(this, Model.PowerStateMachine));
+            Model.PowerStateMachine.AddState(new EmpoweredPlayerPowerState(this, Model.PowerStateMachine));
         }
 
         private void Start()
         {
-            Model.StateMachine.ChangeState<NormalPlayerState>();
+            Model.InputStateMachine.ChangeState<NormalPlayerInputState>();
+            Model.PowerStateMachine.ChangeState<NormalPlayerPowerState>();
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            Model.StateMachine.CurrentState?.Update();
+            float deltaTimeSeconds = Time.deltaTime;
+            Model.InputStateMachine.CurrentState?.Update(deltaTimeSeconds);
+            Model.PowerStateMachine.CurrentState?.Update(deltaTimeSeconds);
         }
     }
 }

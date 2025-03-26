@@ -17,9 +17,8 @@ namespace Game.FSM
         /// <summary>
         /// Invoked just after the state becomes the active state in the state machine
         /// </summary>
-        public virtual void OnEnter()
+        public virtual void OnEnter(object? message)
         {
-            Debug.Log($"Enter state {GetType()}");
         }
 
         /// <summary>
@@ -27,15 +26,13 @@ namespace Game.FSM
         /// </summary>
         public virtual void OnLeaving()
         {
-            Debug.Log($"Leaving state {GetType()}");
         }
 
         /// <summary>
         /// Run every frame that the state is active within the state machine
         /// </summary>
-        public virtual void Update()
+        public virtual void Update(float deltaTimeSeconds)
         {
-            
         }
     }
 }

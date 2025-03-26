@@ -6,7 +6,7 @@ namespace Runtime.Player
     {
         public readonly Player Player;
         
-        protected PlayerState(Player player) : base(player.Model.StateMachine)
+        protected PlayerState(Player player, StateMachine stateMachine) : base(stateMachine)
         {
             Player = player;
         }
