@@ -1,0 +1,5 @@
+#"Enable C# 8.0+ nullable reference types"
+-nullable:enable
+
+#"Treat all nullable warnings as errors"
+-warnaserror:nullable
