@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfea3fb9417e4d099b8e867366bbea3c, type: 3}
   m_Name: Empowered
   m_EditorClassIdentifier: 
+  AttackKeyCode: 323
+  AttackCooldownSeconds: 0.1
+  PlayerSpeed: 2

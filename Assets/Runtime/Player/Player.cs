@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Game.FSM;
 using Runtime.Player.InputStates;
 using Runtime.Player.PowerStates;
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -13,6 +14,7 @@ namespace Runtime.Player
         public ProjectilePool ProjectilePool = null!;
         public CharacterController CharacterController = null!;
         public Transform ProjectileSpawnPoint = null!;
+        public ThirdPersonController ThirdPersonController = null!;
         
         [Header("Initial States")]
         [Tooltip("Input states for the player. The first state is the initial state. Not editable at runtime.")]

@@ -1,10 +1,11 @@
 ﻿using Game.FSM;
+using Runtime.Player.InputStates;
 using UnityEngine;
 
 namespace Runtime.Player.PowerStates
 {
     [CreateAssetMenu(menuName = "Game/Player Power FSM/Ghost", fileName = "Ghost Player Power State")]
-    public class GhostPlayerPowerState : PlayerState
+    public class GhostPlayerPowerState : NormalPlayerPowerState
     {
         public LayerMask ClippableLayers;
 

@@ -8,8 +8,32 @@ namespace Runtime.Player.PowerStates
     [CreateAssetMenu(menuName = "Game/Player Power FSM/Normal", fileName = "Normal Player Power State")]
     public class NormalPlayerPowerState : PlayerState
     {
-        public KeyCode AttackKeyCode = KeyCode.Mouse0;
-        public float AttackCooldownSeconds = 0.2f;
+        public KeyCode AttackKeyCode;
+        public float AttackCooldownSeconds;
+        public float PlayerSpeed;
+
+        private float _previousMoveSpeed;
+
+        public override void OnEnter(object? message)
+        {
+            base.OnEnter(message);
+            
+            if (Player is null)
+                return;
+            
+            _previousMoveSpeed = Player.ThirdPersonController.MoveSpeed;
+            Player.ThirdPersonController.MoveSpeed = PlayerSpeed;
+        }
+
+        public override void OnLeaving()
+        {
+            base.OnLeaving();
+            
+            if (Player is null)
+                return;
+
+            Player.ThirdPersonController.MoveSpeed = _previousMoveSpeed;
+        }
 
         public override void OnUpdate(float deltaTimeSeconds)
         {

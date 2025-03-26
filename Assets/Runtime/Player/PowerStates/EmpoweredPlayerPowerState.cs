@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Runtime.Player.PowerStates
 {
     [CreateAssetMenu(menuName = "Game/Player Power FSM/Empowered", fileName = "Empowered Player Power State")]
-    public class EmpoweredPlayerPowerState : PlayerState
+    public class EmpoweredPlayerPowerState : NormalPlayerPowerState
     {
     }
 }
