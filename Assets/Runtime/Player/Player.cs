@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.FSM;
+using Runtime.Enemies;
 using Runtime.Player.InputStates;
 using Runtime.Player.PowerStates;
 using StarterAssets;
@@ -12,7 +13,8 @@ namespace Runtime.Player
     public class Player : MonoBehaviour
     {
         public static Player? Instance { get; private set; }
-        
+
+        public float InvulnerabilityTime = 0.2f;
         public ProjectilePool ProjectilePool = null!;
         public CharacterController CharacterController = null!;
         public Transform ProjectileSpawnPoint = null!;
@@ -26,10 +28,14 @@ namespace Runtime.Player
         [SerializeField] private PlayerState[] _powerStates = Array.Empty<PlayerState>();
         
         public PlayerModel Model { get; } = new();
+        
+        private TagHandle _enemyTag;
 
         private void Awake()
         {
             Instance = this;
+            
+            _enemyTag = TagHandle.GetExistingTag("Enemy");
             
             InitializeStateMachine(Model.InputStateMachine, _inputStates);
             InitializeStateMachine(Model.PowerStateMachine, _powerStates);
@@ -46,6 +52,8 @@ namespace Runtime.Player
 
         private void Start()
         {
+            Model.Health.OnValueChanged += OnHealthChanged;
+            
             Model.InputStateMachine.ChangeState(_inputStates[0]);
             Model.PowerStateMachine.ChangeState(_powerStates[0]);
         }
@@ -53,6 +61,7 @@ namespace Runtime.Player
         private void OnDestroy()
         {
             Instance = null;
+            Model.Dispose();
         }
 
         private void Update()
@@ -60,6 +69,9 @@ namespace Runtime.Player
             float deltaTimeSeconds = Time.deltaTime;
             Model.InputStateMachine.CurrentState?.OnUpdate(deltaTimeSeconds);
             Model.PowerStateMachine.CurrentState?.OnUpdate(deltaTimeSeconds);
+
+            double newInvulnerabilitySeconds = Math.Max(0.0, Model.InvulnerabilitySeconds.Value - deltaTimeSeconds);
+            Model.InvulnerabilitySeconds.SetValue(newInvulnerabilitySeconds);
             
             Debug_ChangePowerState();
         }
@@ -77,6 +89,29 @@ namespace Runtime.Player
                 Model.PowerStateMachine.ChangeState(_powerStates[i]);
                 return;
             }
+        }
+
+        private void OnHealthChanged(double _, double newValue)
+        {
+            if (newValue > 0)
+                return;
+            
+            Destroy(gameObject);
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (!other.gameObject.CompareTag(_enemyTag))
+                return;
+
+            if (Model.InvulnerabilitySeconds.Value > 0)
+                return;
+
+            if (other.gameObject.GetComponent<Enemy>() is not { Damage: > 0 } enemy)
+                return;
+            
+            Model.Health.SetValue(Model.Health.Value - enemy.Damage);
+            Model.InvulnerabilitySeconds.SetValue(InvulnerabilityTime);
         }
     }
 }

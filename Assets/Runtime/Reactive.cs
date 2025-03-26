@@ -15,8 +15,11 @@ namespace Runtime
             Value = initialValue;
         }
         
-        public void ChangeValue(T? newValue)
+        public void SetValue(T? newValue)
         {
+            if (newValue is not null && Value is not null && Value.Equals(newValue))
+                return;
+            
             T? oldValue = Value;
             Value = newValue;
             
