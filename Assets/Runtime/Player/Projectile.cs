@@ -1,4 +1,5 @@
 using System;
+using Runtime.Enemies;
 using Runtime.Player;
 using UnityEngine;
 
@@ -57,7 +58,7 @@ public class Projectile : MonoBehaviour
 
         if (other.CompareTag(_enemyTag))
         {
-            throw new NotImplementedException();
+            other.GetComponent<Enemy>()?.Kill();
             ReturnToPool();
             return;
         }

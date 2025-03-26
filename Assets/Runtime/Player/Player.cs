@@ -11,6 +11,8 @@ namespace Runtime.Player
 {
     public class Player : MonoBehaviour
     {
+        public static Player? Instance { get; private set; }
+        
         public ProjectilePool ProjectilePool = null!;
         public CharacterController CharacterController = null!;
         public Transform ProjectileSpawnPoint = null!;
@@ -27,6 +29,8 @@ namespace Runtime.Player
 
         private void Awake()
         {
+            Instance = this;
+            
             InitializeStateMachine(Model.InputStateMachine, _inputStates);
             InitializeStateMachine(Model.PowerStateMachine, _powerStates);
 
@@ -44,6 +48,11 @@ namespace Runtime.Player
         {
             Model.InputStateMachine.ChangeState(_inputStates[0]);
             Model.PowerStateMachine.ChangeState(_powerStates[0]);
+        }
+
+        private void OnDestroy()
+        {
+            Instance = null;
         }
 
         private void Update()
