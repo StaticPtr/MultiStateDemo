@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad2f64eafc5249c3bec8ed6a93f39b09, type: 3}
   m_Name: Ghost Player Power State
   m_EditorClassIdentifier: 
+  ClippableLayers:
+    serializedVersion: 2
+    m_Bits: 64

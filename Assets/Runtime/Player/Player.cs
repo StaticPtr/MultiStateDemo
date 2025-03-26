@@ -9,6 +9,9 @@ namespace Runtime.Player
 {
     public class Player : MonoBehaviour
     {
+        public CharacterController CharacterController = null!;
+        
+        [Header("Initial States")]
         [Tooltip("Input states for the player. The first state is the initial state. Not editable at runtime.")]
         [SerializeField]
         private PlayerState[] _inputStates = Array.Empty<PlayerState>();
@@ -45,6 +48,23 @@ namespace Runtime.Player
             float deltaTimeSeconds = Time.deltaTime;
             Model.InputStateMachine.CurrentState?.OnUpdate(deltaTimeSeconds);
             Model.PowerStateMachine.CurrentState?.OnUpdate(deltaTimeSeconds);
+            
+            Debug_ChangePowerState();
+        }
+
+        private void Debug_ChangePowerState()
+        {
+            if (!Debug.isDebugBuild && !Application.isEditor)
+                return;
+
+            for (int i = 0; i < _powerStates.Length; i++)
+            {
+                if (!Input.GetKeyDown(KeyCode.Alpha1 + i))
+                    continue;
+
+                Model.PowerStateMachine.ChangeState(_powerStates[i]);
+                return;
+            }
         }
     }
 }
