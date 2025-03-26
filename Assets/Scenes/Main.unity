@@ -769,6 +769,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05153c1efb1c4d7ebf06d2b2718ba4c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inputStates:
+  - {fileID: 11400000, guid: 35f05fe66a48e774792e9ba9b80135ad, type: 2}
+  - {fileID: 11400000, guid: 33a6314454a1b284cb7f40e3f67748fc, type: 2}
+  _powerStates:
+  - {fileID: 11400000, guid: 2aec6583398cd844cadabfd9bd75a6c4, type: 2}
+  - {fileID: 11400000, guid: 0cb2fe3343217d04ca54c1ee0a8f88f7, type: 2}
+  - {fileID: 11400000, guid: 3d8c439db1625ab4ab913c21979be5b7, type: 2}
 --- !u!1 &1764214107
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game.FSM;
 using Runtime.Player.InputStates;
 using Runtime.Player.PowerStates;
@@ -8,30 +9,42 @@ namespace Runtime.Player
 {
     public class Player : MonoBehaviour
     {
+        [Tooltip("Input states for the player. The first state is the initial state. Not editable at runtime.")]
+        [SerializeField]
+        private PlayerState[] _inputStates = Array.Empty<PlayerState>();
+        
+        [Tooltip("Power states for the player. The first state is the initial state. Not editable at runtime.")]
+        [SerializeField]
+        private PlayerState[] _powerStates = Array.Empty<PlayerState>();
+        
         public PlayerModel Model { get; } = new();
 
         private void Awake()
         {
-            //TODO: Should the states be ScriptableObjects?
-            Model.InputStateMachine.AddState(new NormalPlayerInputState(this, Model.InputStateMachine));
-            Model.InputStateMachine.AddState(new CooldownPlayerInputState(this, Model.InputStateMachine));
-            
-            Model.PowerStateMachine.AddState(new NormalPlayerPowerState(this, Model.PowerStateMachine));
-            Model.PowerStateMachine.AddState(new GhostPlayerPowerState(this, Model.PowerStateMachine));
-            Model.PowerStateMachine.AddState(new EmpoweredPlayerPowerState(this, Model.PowerStateMachine));
+            InitializeStateMachine(Model.InputStateMachine, _inputStates);
+            InitializeStateMachine(Model.PowerStateMachine, _powerStates);
+
+            void InitializeStateMachine(StateMachine stateMachine, IList<PlayerState> states)
+            {
+                foreach (PlayerState inputState in states)
+                {
+                    inputState.Player = this;
+                    stateMachine.AddState(inputState);
+                }   
+            }
         }
 
         private void Start()
         {
-            Model.InputStateMachine.ChangeState<NormalPlayerInputState>();
-            Model.PowerStateMachine.ChangeState<NormalPlayerPowerState>();
+            Model.InputStateMachine.ChangeState(_inputStates[0]);
+            Model.PowerStateMachine.ChangeState(_powerStates[0]);
         }
 
         private void Update()
         {
             float deltaTimeSeconds = Time.deltaTime;
-            Model.InputStateMachine.CurrentState?.Update(deltaTimeSeconds);
-            Model.PowerStateMachine.CurrentState?.Update(deltaTimeSeconds);
+            Model.InputStateMachine.CurrentState?.OnUpdate(deltaTimeSeconds);
+            Model.PowerStateMachine.CurrentState?.OnUpdate(deltaTimeSeconds);
         }
     }
 }

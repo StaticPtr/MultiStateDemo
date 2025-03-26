@@ -4,19 +4,19 @@ using UnityEngine;
 
 namespace Runtime.Player.PowerStates
 {
+    [CreateAssetMenu(menuName = "Game/Player Power FSM/Normal", fileName = "Normal Player Power State")]
     public class NormalPlayerPowerState : PlayerState
     {
         public KeyCode AttackKeyCode = KeyCode.Mouse0;
         public float AttackCooldownSeconds = 0.2f;
-        
-        public NormalPlayerPowerState(Player player, StateMachine stateMachine) : base(player, stateMachine)
-        {
-        }
 
-        public override void Update(float deltaTimeSeconds)
+        public override void OnUpdate(float deltaTimeSeconds)
         {
-            base.Update(deltaTimeSeconds);
+            base.OnUpdate(deltaTimeSeconds);
 
+            if (Player is null)
+                return;
+            
             if (Player.Model.InputStateMachine.CurrentState is not NormalPlayerInputState)
                 return;
 

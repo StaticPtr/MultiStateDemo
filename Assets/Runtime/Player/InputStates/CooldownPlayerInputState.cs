@@ -4,16 +4,13 @@ using UnityEngine;
 
 namespace Runtime.Player.InputStates
 {
+    [CreateAssetMenu(menuName = "Game/Player Input FSM/Cooldown", fileName = "Cooldown Player Input State")]
     public class CooldownPlayerInputState : PlayerState
     {
         public static readonly Type DefaultReturnState = typeof(NormalPlayerInputState);
         
         public float TimeRemainingSeconds { get; private set; }
         private Type _returnStateType = typeof(NormalPlayerInputState);
-        
-        public CooldownPlayerInputState(Player player, StateMachine stateMachine) : base(player, stateMachine)
-        {
-        }
 
         public override void OnEnter(object? message)
         {
@@ -26,15 +23,15 @@ namespace Runtime.Player.InputStates
             _returnStateType = typedMessage.ReturnState ?? DefaultReturnState;
         }
 
-        public override void Update(float deltaTimeSeconds)
+        public override void OnUpdate(float deltaTimeSeconds)
         {
-            base.Update(deltaTimeSeconds);
+            base.OnUpdate(deltaTimeSeconds);
 
             TimeRemainingSeconds -= deltaTimeSeconds;
 
             if (TimeRemainingSeconds <= 0)
             {
-                StateMachine.ChangeState<NormalPlayerInputState>();
+                StateMachine!.ChangeState<NormalPlayerInputState>();
             }
         }
 

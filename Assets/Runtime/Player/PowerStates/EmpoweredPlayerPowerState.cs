@@ -1,16 +1,10 @@
 ﻿using Game.FSM;
+using UnityEngine;
 
 namespace Runtime.Player.PowerStates
 {
+    [CreateAssetMenu(menuName = "Game/Player Power FSM/Empowered", fileName = "Empowered Player Power State")]
     public class EmpoweredPlayerPowerState : PlayerState
     {
-        public EmpoweredPlayerPowerState(Player player, StateMachine stateMachine) : base(player, stateMachine)
-        {
-        }
-
-        public override void Update(float deltaTimeSeconds)
-        {
-            base.Update(deltaTimeSeconds);
-        }
     }
 }

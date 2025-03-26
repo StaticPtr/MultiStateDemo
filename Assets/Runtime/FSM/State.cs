@@ -2,17 +2,12 @@
 
 namespace Game.FSM
 {
-    public abstract class State
+    public abstract class State : ScriptableObject
     {
         /// <summary>
         /// The finite state machine that this state belongs to
         /// </summary>
-        public readonly StateMachine StateMachine;
-        
-        protected State(StateMachine stateMachine)
-        {
-            StateMachine = stateMachine;
-        }
+        public StateMachine? StateMachine { get; internal set; }
         
         /// <summary>
         /// Invoked just after the state becomes the active state in the state machine
@@ -31,7 +26,7 @@ namespace Game.FSM
         /// <summary>
         /// Run every frame that the state is active within the state machine
         /// </summary>
-        public virtual void Update(float deltaTimeSeconds)
+        public virtual void OnUpdate(float deltaTimeSeconds)
         {
         }
     }

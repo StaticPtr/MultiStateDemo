@@ -18,26 +18,38 @@ namespace Game.FSM
         /// <param name="state">The state to add.</param>
         public virtual void AddState(State state)
         {
+            if (state.StateMachine is not null)
+                throw new InvalidOperationException("State already belongs to a state machine");
+            
+            state.StateMachine = this;
             States.Add(state);
         }
         
         
-        public virtual State ChangeState<T>(object? message = null)
+        public State ChangeState<T>(object? message = null)
             where T : State
         {
             return ChangeState(typeof(T), message);
         }
 
-        public virtual State ChangeState(Type type, object? message = null)
+        public State ChangeState(Type type, object? message = null)
         {
             if (GetStateOfType(type) is not { } targetState)
                 throw new InvalidOperationException($"Could not find state of type \"{type.Name}\"");
+
+            ChangeState(targetState, message);
+            return targetState;
+        }
+
+        public virtual void ChangeState(State state, object? message = null)
+        {
+            if (!States.Contains(state))
+                throw new ArgumentException("State is not in state machine", nameof(state));
             
             CurrentState?.OnLeaving();
             LastState = CurrentState;
-            CurrentState = targetState;
+            CurrentState = state;
             CurrentState.OnEnter(message);
-            return CurrentState;
         }
 
         protected virtual State? GetStateOfType(Type type)
