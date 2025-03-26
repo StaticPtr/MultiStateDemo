@@ -1,4 +1,5 @@
-﻿using Game.FSM;
+﻿using System;
+using Game.FSM;
 using Runtime.Player.InputStates;
 using UnityEngine;
 
@@ -20,10 +21,23 @@ namespace Runtime.Player.PowerStates
             if (Player.Model.InputStateMachine.CurrentState is not NormalPlayerInputState)
                 return;
 
-            if (!Input.GetKeyDown(AttackKeyCode))
+            if (!Input.GetKey(AttackKeyCode))
                 return;
+
+            Shoot();
+        }
+
+        private void Shoot()
+        {
+            if (Player is null)
+                throw new ArgumentNullException();
+
+            Projectile projectile = Player.ProjectilePool.Get();
+            projectile.transform.SetParent(Player.ProjectileSpawnPoint, false);
+            projectile.transform.localPosition = Vector3.zero;
+            projectile.transform.localRotation = Quaternion.identity;
+            projectile.transform.SetParent(null, true);
             
-            Debug.Log("Bang");
             Player.Model.InputStateMachine.ChangeState<CooldownPlayerInputState>(
                 new CooldownPlayerInputState.Message(AttackCooldownSeconds)
             );
